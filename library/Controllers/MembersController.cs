@@ -40,6 +40,29 @@ public class MembersController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    public async Task<IActionResult> Edit(long id)
+    {
+        var member = await _member.GetByIdAsync(id);
+        if (member == null)
+        {
+            return NotFound();
+        }
+        return View(member);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(Member member)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(member);
+        }
+
+        await _member.UpdateAsync(member);
+        return RedirectToAction(nameof(Index));
+    }
+
 
 
 
