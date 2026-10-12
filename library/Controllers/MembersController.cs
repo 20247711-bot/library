@@ -22,6 +22,26 @@ public class MembersController : Controller
         return View(member);                             // Views/Books/Index.cshtml
     }
 
-    
+    public IActionResult Create()
+    {
+        return View(new Member());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Member member)
+    {
+        if (!ModelState.IsValid)                        // a required field was left empty
+        {
+            return View(member);
+        }
+
+        await _member.AddAsync(member);
+        return RedirectToAction(nameof(Index));
+    }
+
+
+
+
 
 }

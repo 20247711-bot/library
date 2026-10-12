@@ -47,6 +47,20 @@ public class MemberRepository
         return member;
     }
 
-    
+    public async Task AddAsync(Member member)
+    {
+        const string sql = "INSERT INTO lending.member (full_name, email, member_type) " +
+                           "VALUES (@full_name, @email, @member_type);";
+
+        await using var command = _dataSource.CreateCommand(sql);
+        command.Parameters.AddWithValue("full_name", member.FullName);
+        // A C# null must be sent as DBNull.Value, which is how a database NULL is written.
+        command.Parameters.AddWithValue("email", (object?)member.Email ?? DBNull.Value);
+        command.Parameters.AddWithValue("member_type", (object?)member.MemberType ?? DBNull.Value);
+
+        await command.ExecuteNonQueryAsync();           // runs SQL that returns no rows
+    }
+
+
 
 }
