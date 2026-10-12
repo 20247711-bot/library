@@ -1,0 +1,88 @@
+﻿@model Member
+@{
+    ViewData["Title"] = "Add a Member";
+}
+
+<div class="container py-4">
+    <div class="mb-4">
+        <a asp-action="Index" class="text-decoration-none text-muted">
+            <i class="bi bi-arrow-left me-2"></i>Back to Members
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+            <div class="text-center mb-4">
+                <div class="form-icon bg-primary-subtle text-primary mx-auto mb-3">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <h2 class="fw-bold">Add New Member</h2>
+                <p class="text-muted">Enter the details to register a new library member.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="FullName" class="form-label fw-semibold">Full Name</label>
+                            <input asp-for="FullName" class="form-control form-control-lg"
+                                   placeholder="Enter full name" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                            <input asp-for="Email" type="email" class="form-control form-control-lg"
+                                   placeholder="example@email.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="MemberType" class="form-label fw-semibold">Member Type</label>
+                            <select asp-for="MemberType" class="form-select form-select-lg">
+                                <option value="">Select member type</option>
+                                <option value="Student">Student</option>
+                                <option value="Faculty">Faculty</option>
+                                <option value="Regular">Regular</option>
+                            </select>
+                            <span asp-validation-for="MemberType" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex flex-column flex-sm-row gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="bi bi-person-check me-2"></i>Save Member
+                            </button>
+                            <a asp-action="Index" class="btn btn-light border btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-icon {
+        width: 72px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 22px;
+        font-size: 32px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+    }
+</style>
