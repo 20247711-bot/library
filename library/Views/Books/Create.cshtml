@@ -1,38 +1,94 @@
 ﻿@model Book
 @{
-    ViewData["Title"] = "Add a book";
+    ViewData["Title"] = "Add a Book";
 }
- 
-<h1 class="mb-3">Add a book</h1>
- 
-<form asp-action="Create" method="post" class="card card-body" style="max-width:36rem">
- 
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+
+<div class="container py-4">
+    <div class="mb-4">
+        <a asp-action="Index" class="text-decoration-none text-muted">
+            <i class="bi bi-arrow-left me-2"></i>Back to Books
+        </a>
     </div>
- 
-    <div class="mb-3">
-        <label asp-for="Category" class="form-label"></label>
-        <select asp-for="Category" class="form-select">
-            <option value="">(none)</option>
-            <option>Classic</option>
-            <option>Fiction</option>
-            <option>Poetry</option>
-            <option>Reference</option>
-            <option>Textbook</option>
-        </select>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+            <div class="text-center mb-4">
+                <div class="form-icon bg-success-subtle text-success mx-auto mb-3">
+                    <i class="bi bi-journal-plus"></i>
+                </div>
+                <h2 class="fw-bold">Add New Book</h2>
+                <p class="text-muted">Add a new title to your library collection.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label fw-semibold">Book Title</label>
+                            <input asp-for="Title" class="form-control form-control-lg"
+                                   placeholder="Enter book title" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Category" class="form-label fw-semibold">Category</label>
+                            <select asp-for="Category" class="form-select form-select-lg">
+                                <option value="">Select category</option>
+                                <option value="Classic">Classic</option>
+                                <option value="Fiction">Fiction</option>
+                                <option value="Poetry">Poetry</option>
+                                <option value="Reference">Reference</option>
+                                <option value="Textbook">Textbook</option>
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Price" class="form-label fw-semibold">Price</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text">₱</span>
+                                <input asp-for="Price" class="form-control"
+                                       type="number" step="0.01" min="0"
+                                       placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex flex-column flex-sm-row gap-2">
+                            <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                                <i class="bi bi-bookmark-check me-2"></i>Save Book
+                            </button>
+                            <a asp-action="Index" class="btn btn-light border btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
- 
-    <div class="mb-3">
-        <label asp-for="Price" class="form-label"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
- 
-    <div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="Index" class="btn btn-link">Cancel</a>
-    </div>
-</form>
+</div>
+
+<style>
+    .form-icon {
+        width: 72px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 22px;
+        font-size: 32px;
+    }
+
+    .form-control, .form-select, .input-group-text {
+        border-radius: 10px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 .2rem rgba(25, 135, 84, .12);
+    }
+</style>

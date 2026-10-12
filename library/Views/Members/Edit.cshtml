@@ -1,36 +1,92 @@
 ﻿@model Member
 @{
-    ViewData["Title"] = "Edit a member";
+    ViewData["Title"] = "Edit Member";
 }
- 
-<h1 class="mb-3">Edit a member</h1>
- 
-<form asp-action="Edit" method="post" class="card card-body" style="max-width:36rem">
-    <input type="hidden" asp-for="MemberId" />
 
-    <div class="mb-3">
-        <label asp-for="FullName" class="form-label"></label>
-        <input asp-for="FullName" class="form-control" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
+<div class="container py-4">
+    <div class="mb-4">
+        <a asp-action="Index" class="text-decoration-none text-muted">
+            <i class="bi bi-arrow-left me-2"></i>Back to Members
+        </a>
     </div>
- 
-    <div class="mb-3">
-        <label asp-for="MemberType" class="form-label"></label>
-        <select asp-for="MemberType" class="form-select">
-            <option value="">(none)</option>
-            <option>Student</option>
-            <option>Faculty</option>
-            <option>Regular</option>
-        </select>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+            <div class="text-center mb-4">
+                <div class="form-icon bg-warning-subtle text-warning mx-auto mb-3">
+                    <i class="bi bi-person-gear"></i>
+                </div>
+                <h2 class="fw-bold">Edit Member</h2>
+                <p class="text-muted">Update the member's information below.</p>
+                <span class="badge rounded-pill bg-light text-secondary border">
+                    Member ID: #@Model.MemberId
+                </span>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="MemberId" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="FullName" class="form-label fw-semibold">Full Name</label>
+                            <input asp-for="FullName" class="form-control form-control-lg"
+                                   placeholder="Enter full name" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                            <input asp-for="Email" type="email" class="form-control form-control-lg"
+                                   placeholder="example@email.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="MemberType" class="form-label fw-semibold">Member Type</label>
+                            <select asp-for="MemberType" class="form-select form-select-lg">
+                                <option value="">Select member type</option>
+                                <option value="Student">Student</option>
+                                <option value="Faculty">Faculty</option>
+                                <option value="Regular">Regular</option>
+                            </select>
+                            <span asp-validation-for="MemberType" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex flex-column flex-sm-row gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="bi bi-check2-circle me-2"></i>Save Changes
+                            </button>
+                            <a asp-action="Index" class="btn btn-light border btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
- 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label">Email</label>
-        <input asp-for="Email" type="email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="Index" class="btn btn-link">Cancel</a>
-    </div>
-</form>
+</div>
+
+<style>
+    .form-icon {
+        width: 72px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 22px;
+        font-size: 32px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+    }
+</style>
