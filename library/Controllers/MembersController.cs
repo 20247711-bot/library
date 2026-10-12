@@ -63,6 +63,26 @@ public class MembersController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    public async Task<IActionResult> Delete(long id)
+    {
+        var member = await _member.GetByIdAsync(id);
+        if (member == null)
+        {
+            return NotFound();
+        }
+        return View(member);
+    }
+
+    // POST /Books/Delete/5 : the delete was confirmed.
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(long id)
+    {
+        await _member.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
+    }
+
+
 
 
 
