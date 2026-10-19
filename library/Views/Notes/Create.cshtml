@@ -1,0 +1,103 @@
+﻿
+@model library.Models.Note
+
+@{
+    ViewData["Title"] = "Add a Note";
+}
+
+<div class="container py-4">
+    <div class="mb-4">
+        <a asp-action="Index" class="text-decoration-none text-muted">
+            <i class="bi bi-arrow-left me-2"></i>Back to Notes
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+            <div class="text-center mb-4">
+                <div class="form-icon bg-primary-subtle text-primary mx-auto mb-3">
+                    <i class="bi bi-journal-plus"></i>
+                </div>
+                <h2 class="fw-bold">Add New Note</h2>
+                <p class="text-muted">Enter the details for your new note.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Title"
+                                   class="form-label fw-semibold">Title</label>
+                            <input asp-for="Title"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter note title" />
+                            <span asp-validation-for="Title"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Body"
+                                   class="form-label fw-semibold">Body</label>
+                            <textarea asp-for="Body"
+                                      class="form-control"
+                                      rows="5"
+                                      placeholder="Write your note here..."></textarea>
+                            <span asp-validation-for="Body"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Date"
+                                   class="form-label fw-semibold">Date</label>
+                            <input asp-for="Date"
+                                   type="date"
+                                   class="form-control form-control-lg" />
+                            <span asp-validation-for="Date"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex flex-column flex-sm-row gap-2">
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="bi bi-journal-check me-2"></i>Save Note
+                            </button>
+                            <a asp-action="Index"
+                               class="btn btn-light border btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-icon {
+        width: 72px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 22px;
+        font-size: 32px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

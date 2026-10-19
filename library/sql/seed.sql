@@ -77,6 +77,26 @@ INSERT INTO lending.loan (member_id, book_id, loaned_on, returned_on, days_allow
   (3, 11, '2026-04-06', NULL, 14),
   (6, 1, '2026-04-08', '2026-04-12', 7),
   (9, 2, '2026-04-10', NULL, 7);
+
+  INSERT INTO lending.note (title, body, created_on) VALUES
+ 
+  ('Order new textbooks',    'Ask the dean''s office for the budget before Friday.', '2026-10-01'),
+ 
+  ('Shelf C is full',        NULL,                                                   '2026-10-03'),
+ 
+  ('Library week poster',    'Theme: read local. Use the Benguet photos.',           '2026-10-05'),
+ 
+  ('Return the projector',   NULL,                                                   '2026-10-06'),
+ 
+  ('Check overdue loans',    'Members with books out longer than 14 days.',          '2026-10-08'),
+ 
+  ('Wi-Fi password changed', NULL,                                                   '2026-10-09'),
+ 
+  ('Inventory count',        'Count the Classic section first.',                     '2026-10-12');
+ 
+ 
+ 
+SELECT COUNT(*) AS notes, COUNT(body) AS with_body FROM lending.note;
  
 -- Confirm: 14 members, 17 books, 40 loans
 SELECT (SELECT COUNT(*) FROM lending.member) AS members,

@@ -1,0 +1,174 @@
+﻿
+@model List<library.Models.Note>
+
+@{
+    ViewData["Title"] = "Notes";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">Notes Management</h2>
+            <p class="text-muted mb-0">
+                Manage your notes and their information.
+            </p>
+        </div>
+
+        <a asp-action="Create"
+           class="btn btn-primary px-4 py-2 rounded-3">
+            <i class="bi bi-journal-plus me-2"></i>Add Note
+        </a>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 d-flex align-items-center gap-3">
+                    <div class="rounded-3 bg-primary-subtle text-primary p-3">
+                        <i class="bi bi-journal-text fs-3"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Total Notes</p>
+                        <h3 class="fw-bold mb-0">@Model.Count</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                <h5 class="fw-bold mb-0">Notes Directory</h5>
+
+                <div class="input-group" style="max-width: 320px;">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text"
+                           id="noteSearch"
+                           class="form-control bg-light border-start-0"
+                           placeholder="Search notes...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle table-hover" id="notesTable">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th class="py-3">ID</th>
+                            <th class="py-3">TITLE</th>
+                            <th class="py-3">BODY</th>
+                            <th class="py-3">DATE</th>
+                            <th class="py-3 text-end">ACTIONS</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var note in Model)
+                        {
+                            <tr>
+                                <td class="text-muted">#@note.NoteId</td>
+
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar-circle">
+                                            @(string.IsNullOrWhiteSpace(note.Title)
+                                                ? "?"
+                                                : note.Title.Substring(0, 1).ToUpper())
+                                        </div>
+                                        <span class="fw-semibold">@note.Title</span>
+                                    </div>
+                                </td>
+
+                                <td class="note-body">
+                                    @(string.IsNullOrWhiteSpace(note.Body)
+                                        ? "—"
+                                        : note.Body)
+                                </td>
+
+                                <td>
+                                    @(note.Date?.ToString("MMM dd, yyyy") ?? "—")
+                                </td>
+
+                                <td class="text-end text-nowrap">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@note.NoteId"
+                                       class="btn btn-sm btn-light border rounded-2 me-1">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@note.NoteId"
+                                       class="btn btn-sm btn-outline-danger rounded-2">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div id="noNotesFound"
+                     class="text-center text-muted py-4"
+                     style="display:none;">
+                    No notes match your search.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: #e8efff;
+        color: #3159b8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .table thead th {
+        border-bottom: 1px solid #e9ecef;
+        white-space: nowrap;
+    }
+
+    .table tbody td {
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .note-body {
+        max-width: 350px;
+        overflow-wrap: anywhere;
+    }
+</style>
+
+<script>
+    document.getElementById("noteSearch").addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#notesTable tbody tr");
+        let visible = 0;
+
+        rows.forEach(row => {
+            const match = row.textContent.toLowerCase().includes(query);
+            row.style.display = match ? "" : "none";
+
+            if (match) {
+                visible++;
+            }
+        });
+
+        document.getElementById("noNotesFound").style.display =
+            visible === 0 ? "block" : "none";
+    });
+</script>
