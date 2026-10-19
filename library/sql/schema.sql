@@ -38,3 +38,19 @@ CREATE TABLE lending.loan (
   CONSTRAINT chk_return_after_loan CHECK (returned_on IS NULL OR returned_on >= loaned_on)
 );
 
+
+
+CREATE TABLE lending.note (
+ 
+    note_id     BIGINT        GENERATED ALWAYS AS IDENTITY,
+ 
+    title       VARCHAR(100)  NOT NULL,
+ 
+    body        TEXT,
+ 
+    created_on  DATE          NOT NULL DEFAULT CURRENT_DATE,
+ 
+    CONSTRAINT pk_note PRIMARY KEY (note_id)
+ 
+);
+
