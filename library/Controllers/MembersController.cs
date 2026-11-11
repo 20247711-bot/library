@@ -28,18 +28,29 @@ public class MembersController : Controller
         return View(new Member());
     }
 
+    // POST /Members/Create : the form was submitted.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Member member)
     {
-        if (!ModelState.IsValid)                        // a required field was left empty
+        if (!ModelState.IsValid)
         {
             return View(member);
         }
 
-        await _member.AddAsync(member);
+        try
+        {
+            await _member.AddAsync(member);
+        }
+        catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
+        {
+            ModelState.AddModelError("Email", "Another member already uses this email.");
+            return View(member);
+        }
+
         return RedirectToAction(nameof(Index));
     }
+
 
     public async Task<IActionResult> Edit(long id)
     {
@@ -51,6 +62,7 @@ public class MembersController : Controller
         return View(member);
     }
 
+    // POST /Members/Edit/5 : the changed form was submitted.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Member member)
@@ -60,9 +72,19 @@ public class MembersController : Controller
             return View(member);
         }
 
-        await _member.UpdateAsync(member);
+        try
+        {
+            await _member.UpdateAsync(member);
+        }
+        catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
+        {
+            ModelState.AddModelError("Email", "Another member already uses this email.");
+            return View(member);
+        }
+
         return RedirectToAction(nameof(Index));
     }
+
 
     public async Task<IActionResult> Delete(long id)
     {
