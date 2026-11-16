@@ -52,6 +52,7 @@
                             <th class="py-3">FULL NAME</th>
                             <th class="py-3">EMAIL ADDRESS</th>
                             <th class="py-3">MEMBER TYPE</th>
+                            <th class="text-end">Books out</th>
                             <th class="py-3 text-end">ACTIONS</th>
                         </tr>
                     </thead>
@@ -75,6 +76,7 @@
                                     <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">
                                         @(member.MemberType ?? "Unassigned")
                                     </span>
+                                    <td class="text-end">@member.OpenLoans</td>
                                 </td>
                                 <td class="text-end">
                                     <a asp-action="Details" asp-route-id="@member.MemberId"
