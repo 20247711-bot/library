@@ -77,15 +77,22 @@
                                     </span>
                                 </td>
                                 <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@member.MemberId"
+                                       class="btn btn-sm btn-outline-primary rounded-2 me-1">
+                                        Loans
+                                    </a>
+
                                     <a asp-action="Edit" asp-route-id="@member.MemberId"
                                        class="btn btn-sm btn-light border rounded-2 me-1">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
+
                                     <a asp-action="Delete" asp-route-id="@member.MemberId"
                                        class="btn btn-sm btn-outline-danger rounded-2">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
+
                             </tr>
                         }
                     </tbody>
