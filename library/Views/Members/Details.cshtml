@@ -3,36 +3,256 @@
     ViewData["Title"] = Model.Member.FullName;
 }
 
-<h1 class="mb-1">@Model.Member.FullName</h1>
-<p class="text-muted">@Model.Member.MemberType · @(Model.Member.Email ?? "no email")</p>
-<h2 class="h5 mt-4">Loans</h2>
-@if (Model.Loans.Count == 0)
-{
-    <p>This member has never borrowed a book.</p>
-}
-else
-{
-    <table class="table table-striped align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Book</th>
-                <th>Loaned</th>
-                <th>Returned</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var loan in Model.Loans)
-            {
-                <tr>
-                    <td>@loan.BookTitle</td>
-                    <td>@(loan.LoanedOn.ToString("yyyy-MM-dd"))</td>
-                    <td>@(loan.ReturnedOn?.ToString("yyyy-MM-dd") ?? "—")</td>
-                    <td>@loan.Status</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<div class="container-fluid py-4">
 
-<a asp-action="Index" class="btn btn-link px-0">Back to members</a>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">Member Details</h2>
+            <p class="text-muted mb-0">View member information and borrowing history.</p>
+        </div>
+
+        <a asp-action="Index" class="btn btn-light border px-4 py-2 rounded-3">
+            <i class="bi bi-arrow-left me-2"></i>Back to Members
+        </a>
+    </div>
+
+    <!-- Member Information -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar-circle">
+                    @(string.IsNullOrWhiteSpace(Model.Member.FullName)
+                        ? "?"
+                        : Model.Member.FullName.Substring(0, 1).ToUpper())
+                </div>
+
+                <div>
+                    <h4 class="fw-bold mb-1">@Model.Member.FullName</h4>
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-envelope me-2"></i>
+                        @(Model.Member.Email ?? "No email")
+                    </p>
+                    <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">
+                        @(Model.Member.MemberType ?? "Unassigned")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 d-flex align-items-center gap-3">
+                    <div class="rounded-3 bg-primary-subtle text-primary p-3">
+                        <i class="bi bi-journal-bookmark fs-3"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Total Loans</p>
+                        <h3 class="fw-bold mb-0">@Model.Loans.Count</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 d-flex align-items-center gap-3">
+                    <div class="rounded-3 bg-warning-subtle text-warning p-3">
+                        <i class="bi bi-book-half fs-3"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Books Out</p>
+                        <h3 class="fw-bold mb-0">@Model.Loans.Count(l => l.Status == "Out")</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 d-flex align-items-center gap-3">
+                    <div class="rounded-3 bg-danger-subtle text-danger p-3">
+                        <i class="bi bi-exclamation-circle fs-3"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Overdue Loans</p>
+                        <h3 class="fw-bold mb-0">@Model.Loans.Count(l => l.Status == "Overdue")</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Loan History Table -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                <div>
+                    <h5 class="fw-bold mb-1">Loan History</h5>
+                    <p class="text-muted small mb-0">
+                        Books borrowed by @Model.Member.FullName
+                    </p>
+                </div>
+
+                @if (Model.Loans.Count > 0)
+                {
+                    <div class="input-group" style="max-width: 320px;">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" id="loanSearch"
+                               class="form-control bg-light border-start-0"
+                               placeholder="Search loan history...">
+                    </div>
+                }
+            </div>
+
+            @if (Model.Loans.Count == 0)
+            {
+                <div class="text-center py-5">
+                    <div class="empty-icon bg-primary-subtle text-primary mx-auto mb-3">
+                        <i class="bi bi-journal-x"></i>
+                    </div>
+                    <h5 class="fw-bold">No Loan History</h5>
+                    <p class="text-muted mb-0">
+                        This member has never borrowed a book.
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover" id="loansTable">
+                        <thead>
+                            <tr class="text-muted small">
+                                <th class="py-3">BOOK</th>
+                                <th class="py-3">LOANED DATE</th>
+                                <th class="py-3">RETURNED DATE</th>
+                                <th class="py-3">STATUS</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var loan in Model.Loans)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="book-icon">
+                                                <i class="bi bi-book"></i>
+                                            </div>
+                                            <span class="fw-semibold">@loan.BookTitle</span>
+                                        </div>
+                                    </td>
+
+                                    <td class="text-muted">
+                                        @loan.LoanedOn.ToString("yyyy-MM-dd")
+                                    </td>
+
+                                    <td class="text-muted">
+                                        @(loan.ReturnedOn?.ToString("yyyy-MM-dd") ?? "—")
+                                    </td>
+
+                                    <td>
+                                        <span class="badge rounded-pill px-3 py-2
+                                            @(loan.Status == "Overdue"
+                                                ? "bg-danger-subtle text-danger"
+                                                : loan.Status == "Out"
+                                                    ? "bg-warning-subtle text-warning"
+                                                    : "bg-secondary-subtle text-secondary")">
+                                            @loan.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div id="noLoansFound" class="text-center text-muted py-4" style="display:none;">
+                        No loans match your search.
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .avatar-circle {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: #e8efff;
+        color: #3159b8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .book-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: #e8efff;
+        color: #3159b8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .empty-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
+
+    .table thead th {
+        border-bottom: 1px solid #e9ecef;
+        white-space: nowrap;
+    }
+
+    .table tbody td {
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+</style>
+
+<script>
+    const loanSearch = document.getElementById("loanSearch");
+
+    if (loanSearch) {
+        loanSearch.addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#loansTable tbody tr");
+            let visible = 0;
+
+            rows.forEach(row => {
+                const match = row.textContent.toLowerCase().includes(query);
+                row.style.display = match ? "" : "none";
+                if (match) visible++;
+            });
+
+            document.getElementById("noLoansFound").style.display =
+                visible === 0 ? "block" : "none";
+        });
+    }
+</script>
